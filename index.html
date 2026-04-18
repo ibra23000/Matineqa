@@ -3,27 +3,92 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MatineQA Solutions | إدارة الجودة الرقمية</title>
+    <title>MatineQA Solutions | النظام التفاعلي</title>
     <style>
-        body { margin: 0; padding: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh; background: #0f172a; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: white; }
-        .container { text-align: center; background: rgba(30, 41, 59, 0.7); padding: 50px; border-radius: 25px; border: 1px solid #334155; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); max-width: 900px; width: 90%; }
-        .hero-img { width: 100%; border-radius: 15px; margin-bottom: 30px; border: 2px solid #38bdf8; }
-        h1 { font-size: 3rem; margin-bottom: 10px; color: #38bdf8; text-transform: uppercase; letter-spacing: 2px; }
-        h2 { font-size: 1.5rem; color: #94a3b8; font-weight: normal; margin-bottom: 30px; }
-        .badge { background: #38bdf8; color: #0f172a; padding: 5px 15px; border-radius: 50px; font-weight: bold; font-size: 0.9rem; margin-bottom: 15px; display: inline-block; }
-        .description { line-height: 1.8; color: #cbd5e1; margin-bottom: 30px; font-size: 1.1rem; }
+        :root { --primary: #38bdf8; --dark: #0f172a; --card: #1e293b; }
+        body { margin: 0; padding: 0; min-height: 100vh; background: var(--dark); font-family: 'Segoe UI', sans-serif; color: white; overflow-x: hidden; }
+        
+        /* واجهة الموقع الرئيسية */
+        .main-container { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px; text-align: center; }
+        .hero-img { width: 100%; max-width: 700px; border-radius: 15px; border: 2px solid var(--primary); margin-bottom: 20px; }
+        h1 { color: var(--primary); font-size: 2.5rem; margin: 10px 0; }
+        .badge { background: var(--primary); color: var(--dark); padding: 5px 15px; border-radius: 50px; font-weight: bold; margin-bottom: 10px; display: inline-block; }
+
+        /* صندوق دردشة مريم */
+        #chat-widget { position: fixed; bottom: 20px; right: 20px; z-index: 1000; }
+        #chat-button { width: 60px; height: 60px; background: var(--primary); border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.3); transition: 0.3s; }
+        #chat-button:hover { transform: scale(1.1); }
+        
+        #chat-window { position: fixed; bottom: 90px; right: 20px; width: 350px; height: 450px; background: var(--card); border-radius: 20px; border: 1px solid var(--primary); display: none; flex-direction: column; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
+        #chat-header { background: var(--primary); color: var(--dark); padding: 15px; font-weight: bold; display: flex; justify-content: space-between; align-items: center; }
+        #chat-messages { flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; font-size: 0.9rem; }
+        .message { padding: 10px 15px; border-radius: 15px; max-width: 80%; }
+        .bot { background: #334155; align-self: flex-start; }
+        .user { background: var(--primary); color: var(--dark); align-self: flex-end; }
+        
+        #chat-input-area { padding: 10px; background: #0f172a; display: flex; gap: 5px; }
+        #chat-input { flex: 1; padding: 8px; border-radius: 10px; border: 1px solid #334155; background: #1e293b; color: white; outline: none; }
+        #send-btn { background: var(--primary); border: none; padding: 5px 15px; border-radius: 10px; cursor: pointer; color: var(--dark); font-weight: bold; }
     </style>
 </head>
 <body>
-    <div class="container">
-        <span class="badge">OFFICIAL LANDING PAGE</span>
-        <img src="matine-boss.png" alt="MatineQA Solutions" class="hero-img" onerror="this.src='https://via.placeholder.com/800x450/1e293b/38bdf8?text=MatineQA+Solutions+Loading...'">
+
+    <div class="main-container">
+        <span class="badge">نظام إدارة الجودة الذكي</span>
+        <img src="matine-boss.png" alt="MatineQA" class="hero-img" onerror="this.src='https://via.placeholder.com/600x350/1e293b/38bdf8?text=MatineQA+Solutions'">
         <h1>MATINEQA SOLUTIONS</h1>
-        <h2>Digital Excellence in Oil & Gas Quality Management</h2>
-        <div class="description">
-            منصة <strong>متين</strong> لإدارة الجودة الرقمية، المصممة خصيصاً لقطاع النفط والغاز. 
-            دقة متناهية، رقابة صارمة، وحلول هندسية ذكية.
+        <p>مرحباً بك مهندس صديقي. النظام الآن في وضع "الاستعداد التفاعلي".</p>
+    </div>
+
+    <div id="chat-widget">
+        <div id="chat-window">
+            <div id="chat-header">
+                <span>👧 مريم AI - مساعدة الجودة</span>
+                <button onclick="toggleChat()" style="background:none; border:none; color:black; cursor:pointer; font-weight:bold;">X</button>
+            </div>
+            <div id="chat-messages" id="messages">
+                <div class="message bot">مرحباً بك! أنا مريم، مساعدتك الذكية في منصة MatineQA. كيف يمكنني مساعدتك في تدقيق الجودة اليوم؟</div>
+            </div>
+            <div id="chat-input-area">
+                <input type="text" id="chat-input" placeholder="اكتب استفسارك هنا...">
+                <button id="send-btn" onclick="sendMessage()">إرسال</button>
+            </div>
+        </div>
+        <div id="chat-button" onclick="toggleChat()">
+            <span style="font-size: 30px;">👧</span>
         </div>
     </div>
+
+    <script>
+        function toggleChat() {
+            const window = document.getElementById('chat-window');
+            window.style.display = window.style.display === 'flex' ? 'none' : 'flex';
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('chat-input');
+            const messagesContainer = document.getElementById('chat-messages');
+            
+            if (input.value.trim() !== "") {
+                // رسالة المستخدم
+                const userDiv = document.createElement('div');
+                userDiv.className = 'message user';
+                userDiv.textContent = input.value;
+                messagesContainer.appendChild(userDiv);
+
+                // رد مريم (بشكل آلي حالياً)
+                setTimeout(() => {
+                    const botDiv = document.createElement('div');
+                    botDiv.className = 'message bot';
+                    botDiv.textContent = "لقد تلقيت طلبك بخصوص: (" + input.value + "). أنا الآن أتعلم كيفية معالجة هذه البيانات هندسياً، انتظرني قريباً!";
+                    messagesContainer.appendChild(botDiv);
+                    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                }, 1000);
+
+                input.value = "";
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            }
+        }
+    </script>
 </body>
 </html>
