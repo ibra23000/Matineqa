@@ -1,23 +1,50 @@
-// هذا الملف يعمل كخادم وسيط مخفي على Vercel
 export default async function handler(req, res) {
+    // التأكد من أن الطلب من نوع POST
+    if (req.method !== 'POST') {
+        return res.status(405).json({ reply: "عذراً، هذا المسار يقبل طلبات POST فقط." });
+    }
+
     const { prompt } = req.body;
-    const API_KEY = process.env.GEMINI_API_KEY; // هنا يتم استدعاء المفتاح المشفر من إعدادات Vercel
+    
+    // استدعاء المفتاح السري من إعدادات Vercel
+    const API_KEY = process.env.GEMINI_API_KEY;
+
+    if (!API_KEY) {
+        return res.status(500).json({ reply: "خطأ: مفتاح الـ API غير معرف في إعدادات Vercel. يرجى إضافة GEMINI_API_KEY." });
+    }
 
     try {
-        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${API_KEY}`, {
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${API_KEY}`;
+
+        const response = await fetch(url, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: {
+                'Content-Type': 'application/json',
+            },
             body: JSON.stringify({
-                contents: [{ 
-                    parts: [{ text: "You are Meriem, an expert Senior QA/QC Engineer. Answer this technical query: " + prompt }] 
+                contents: [{
+                    parts: [{
+                        text: `أنتِ مريم، مهندسة جودة (Senior QA/QC Mechanical Engineer) خبيرة في قطاع النفط والغاز. 
+                        تعملين في منصة MatineQA. إجاباتك يجب أن تكون احترافية، دقيقة، وتستند إلى المعايير الدولية 
+                        مثل ASME, DNV, API, ASTM, ISO. خاطبي المستخدم بـ "مهندس صديقي".
+                        السؤال التقني هو: ${prompt}`
+                    }]
                 }]
             })
         });
 
         const data = await response.json();
-        const reply = data.candidates[0].content.parts[0].text;
-        res.status(200).json({ reply });
+
+        // التأكد من وجود استجابة صحيحة من Gemini
+        if (data.candidates && data.candidates[0].content && data.candidates[0].content.parts) {
+            const botReply = data.candidates[0].content.parts[0].text;
+            return res.status(200).json({ reply: botReply });
+        } else {
+            throw new Error("Invalid response structure from Gemini API");
+        }
+
     } catch (error) {
-        res.status(500).json({ reply: "خطأ في الاتصال بالذكاء الاصطناعي." });
+        console.error("Error with Gemini API:", error);
+        return res.status(500).json({ reply: "عذراً مهندس، حدث خطأ أثناء الاتصال بعقل الذكاء الاصطناعي. تأكد من صحة المفتاح وسعة الاستخدام." });
     }
 }
