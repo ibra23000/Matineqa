@@ -3,90 +3,124 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MatineQA Solutions | النظام التفاعلي</title>
+    <title>MatineQA Solutions | العرض التفاعلي</title>
     <style>
         :root { --primary: #38bdf8; --dark: #0f172a; --card: #1e293b; }
-        body { margin: 0; padding: 0; min-height: 100vh; background: var(--dark); font-family: 'Segoe UI', sans-serif; color: white; overflow-x: hidden; }
+        body { margin: 0; padding: 0; min-height: 100vh; background: var(--dark); font-family: 'Segoe UI', Tahoma, sans-serif; color: white; overflow-x: hidden; }
         
-        /* واجهة الموقع الرئيسية */
         .main-container { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px; text-align: center; }
-        .hero-img { width: 100%; max-width: 700px; border-radius: 15px; border: 2px solid var(--primary); margin-bottom: 20px; }
-        h1 { color: var(--primary); font-size: 2.5rem; margin: 10px 0; }
-        .badge { background: var(--primary); color: var(--dark); padding: 5px 15px; border-radius: 50px; font-weight: bold; margin-bottom: 10px; display: inline-block; }
+        h1 { color: var(--primary); font-size: 2.8rem; margin: 10px 0; text-shadow: 0 0 15px rgba(56, 189, 248, 0.4); }
+        .badge { background: var(--primary); color: var(--dark); padding: 5px 20px; border-radius: 50px; font-weight: bold; margin-bottom: 25px; display: inline-block; box-shadow: 0 4px 10px rgba(56, 189, 248, 0.3); }
 
-        /* صندوق دردشة مريم */
-        #chat-widget { position: fixed; bottom: 20px; right: 20px; z-index: 1000; }
-        #chat-button { width: 60px; height: 60px; background: var(--primary); border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.3); transition: 0.3s; }
-        #chat-button:hover { transform: scale(1.1); }
+        /* معرض الصور المتطور */
+        .slider-container { width: 100%; max-width: 850px; position: relative; border-radius: 20px; border: 3px solid var(--primary); overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.6); margin-bottom: 30px; background: #000; }
+        .slides { display: flex; transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1); }
+        .slide { min-width: 100%; position: relative; display: flex; align-items: center; justify-content: center; }
+        .slide img { width: 100%; height: auto; display: block; object-fit: cover; }
+
+        /* صندوق مريم AI */
+        #chat-widget { position: fixed; bottom: 25px; right: 25px; z-index: 1000; }
+        #chat-button { width: 65px; height: 65px; background: var(--primary); border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; box-shadow: 0 8px 20px rgba(0,0,0,0.4); transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        #chat-button:hover { transform: rotate(10deg) scale(1.1); }
         
-        #chat-window { position: fixed; bottom: 90px; right: 20px; width: 350px; height: 450px; background: var(--card); border-radius: 20px; border: 1px solid var(--primary); display: none; flex-direction: column; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
-        #chat-header { background: var(--primary); color: var(--dark); padding: 15px; font-weight: bold; display: flex; justify-content: space-between; align-items: center; }
-        #chat-messages { flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; font-size: 0.9rem; }
-        .message { padding: 10px 15px; border-radius: 15px; max-width: 80%; }
-        .bot { background: #334155; align-self: flex-start; }
-        .user { background: var(--primary); color: var(--dark); align-self: flex-end; }
+        #chat-window { position: fixed; bottom: 100px; right: 25px; width: 360px; height: 480px; background: var(--card); border-radius: 25px; border: 1px solid var(--primary); display: none; flex-direction: column; overflow: hidden; box-shadow: 0 15px 35px rgba(0,0,0,0.7); animation: slideUp 0.3s ease; }
+        @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
         
-        #chat-input-area { padding: 10px; background: #0f172a; display: flex; gap: 5px; }
-        #chat-input { flex: 1; padding: 8px; border-radius: 10px; border: 1px solid #334155; background: #1e293b; color: white; outline: none; }
-        #send-btn { background: var(--primary); border: none; padding: 5px 15px; border-radius: 10px; cursor: pointer; color: var(--dark); font-weight: bold; }
+        #chat-header { background: var(--primary); color: var(--dark); padding: 18px; font-weight: bold; display: flex; justify-content: space-between; align-items: center; font-size: 1.1rem; }
+        #chat-messages { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; }
+        .message { padding: 12px 18px; border-radius: 18px; max-width: 85%; line-height: 1.5; font-size: 0.95rem; }
+        .bot { background: #334155; align-self: flex-start; border-bottom-right-radius: 4px; }
+        .user { background: var(--primary); color: var(--dark); align-self: flex-end; border-bottom-left-radius: 4px; font-weight: 500; }
+        
+        #chat-input-area { padding: 15px; background: #0b1121; display: flex; gap: 8px; border-top: 1px solid #334155; }
+        #chat-input { flex: 1; padding: 10px 15px; border-radius: 12px; border: 1px solid #334155; background: #1e293b; color: white; outline: none; }
+        #send-btn { background: var(--primary); border: none; padding: 8px 18px; border-radius: 12px; cursor: pointer; color: var(--dark); font-weight: bold; transition: 0.2s; }
+        #send-btn:hover { opacity: 0.9; }
     </style>
 </head>
 <body>
 
     <div class="main-container">
-        <span class="badge">نظام إدارة الجودة الذكي</span>
-        <img src="matine-boss.png" alt="MatineQA" class="hero-img" onerror="this.src='https://via.placeholder.com/600x350/1e293b/38bdf8?text=MatineQA+Solutions'">
+        <span class="badge">نظام MatineQA Solutions المتكامل</span>
         <h1>MATINEQA SOLUTIONS</h1>
-        <p>مرحباً بك مهندس صديقي. النظام الآن في وضع "الاستعداد التفاعلي".</p>
+        
+        <div class="slider-container">
+            <div class="slides" id="slider">
+                <div class="slide"><img src="matine-2banner.jpg.png" alt="Banner 2"></div>
+                <div class="slide"><img src="matine-banner.jpg.png" alt="Banner Main"></div>
+                <div class="slide"><img src="matine-boss.png.png" alt="Baby Boss QA"></div>
+            </div>
+        </div>
+
+        <p style="max-width: 600px; color: #94a3b8; font-size: 1.1rem;">
+            أهلاً بك يا مهندس في واجهة التحكم الرقمية. استعرض صور المشروع وتواصل مع مساعدتك الذكية مريم بالأسفل.
+        </p>
     </div>
 
     <div id="chat-widget">
         <div id="chat-window">
             <div id="chat-header">
-                <span>👧 مريم AI - مساعدة الجودة</span>
-                <button onclick="toggleChat()" style="background:none; border:none; color:black; cursor:pointer; font-weight:bold;">X</button>
+                <span>👧 مريم AI - دعم الجودة</span>
+                <button onclick="toggleChat()" style="background:none; border:none; color:black; cursor:pointer; font-size: 1.2rem; font-weight:bold;">×</button>
             </div>
             <div id="chat-messages" id="messages">
-                <div class="message bot">مرحباً بك! أنا مريم، مساعدتك الذكية في منصة MatineQA. كيف يمكنني مساعدتك في تدقيق الجودة اليوم؟</div>
+                <div class="message bot">مرحباً مهندس صديقي! لقد قمتُ بتحديث المعرض بصورك الثلاث الجديدة. هل تظهر بوضوح الآن؟</div>
             </div>
             <div id="chat-input-area">
-                <input type="text" id="chat-input" placeholder="اكتب استفسارك هنا...">
+                <input type="text" id="chat-input" placeholder="اكتب رسالتك لـ مريم...">
                 <button id="send-btn" onclick="sendMessage()">إرسال</button>
             </div>
         </div>
         <div id="chat-button" onclick="toggleChat()">
-            <span style="font-size: 30px;">👧</span>
+            <span style="font-size: 32px;">👧</span>
         </div>
     </div>
 
     <script>
+        // كود تحريك الصور تلقائياً (يمين إلى يسار)
+        let currentIndex = 0;
+        const slider = document.getElementById('slider');
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+
+        function updateSlider() {
+            // التحريك بناءً على اتجاه RTL
+            slider.style.transform = `translateX(${currentIndex * 100}%)`;
+        }
+
+        function nextSlide() {
+            currentIndex = (currentIndex + 1) % totalSlides;
+            updateSlider();
+        }
+
+        // تبديل الصورة كل 4 ثوانٍ
+        setInterval(nextSlide, 4000);
+
         function toggleChat() {
-            const window = document.getElementById('chat-window');
-            window.style.display = window.style.display === 'flex' ? 'none' : 'flex';
+            const win = document.getElementById('chat-window');
+            win.style.display = win.style.display === 'flex' ? 'none' : 'flex';
         }
 
         function sendMessage() {
             const input = document.getElementById('chat-input');
-            const messagesContainer = document.getElementById('chat-messages');
+            const messages = document.getElementById('chat-messages');
             
             if (input.value.trim() !== "") {
-                // رسالة المستخدم
-                const userDiv = document.createElement('div');
-                userDiv.className = 'message user';
-                userDiv.textContent = input.value;
-                messagesContainer.appendChild(userDiv);
+                const userMsg = document.createElement('div');
+                userMsg.className = 'message user';
+                userMsg.textContent = input.value;
+                messages.appendChild(userMsg);
 
-                // رد مريم (بشكل آلي حالياً)
                 setTimeout(() => {
-                    const botDiv = document.createElement('div');
-                    botDiv.className = 'message bot';
-                    botDiv.textContent = "لقد تلقيت طلبك بخصوص: (" + input.value + "). أنا الآن أتعلم كيفية معالجة هذه البيانات هندسياً، انتظرني قريباً!";
-                    messagesContainer.appendChild(botDiv);
-                    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                    const botMsg = document.createElement('div');
+                    botMsg.className = 'message bot';
+                    botMsg.textContent = "أنا معك يا مهندس. بخصوص (" + input.value + ")، جاري ربط البيانات بمنظومة MatineQA المركزية.";
+                    messages.appendChild(botMsg);
+                    messages.scrollTop = messages.scrollHeight;
                 }, 1000);
 
                 input.value = "";
-                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                messages.scrollTop = messages.scrollHeight;
             }
         }
     </script>
