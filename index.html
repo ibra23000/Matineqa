@@ -3,18 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MatineQA | Advanced QC & Repair Analytics</title>
+    <title>MatineQA | Senior QA/QC AI System</title>
     <style>
-        :root { --primary: #38bdf8; --dark: #0f172a; --card: #1e293b; --success: #4ade80; --danger: #f87171; --accent: #f59e0b; }
-        body { margin: 0; padding: 0; min-height: 100vh; background: var(--dark); font-family: 'Segoe UI', sans-serif; color: white; }
+        :root { --primary: #38bdf8; --dark: #0f172a; --card: #1e293b; --success: #4ade80; --danger: #f87171; }
+        body { margin: 0; padding: 0; min-height: 100vh; background: var(--dark); font-family: 'Segoe UI', Tahoma, sans-serif; color: white; }
         
-        /* Dashboard Styling */
-        .dashboard { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; width: 90%; max-width: 800px; margin: 20px auto; }
-        .stat-card { background: var(--card); padding: 15px; border-radius: 15px; border: 1px solid #334155; text-align: center; }
-        .stat-value { font-size: 1.5rem; font-weight: bold; color: var(--primary); }
-        .stat-label { font-size: 0.8rem; color: #94a3b8; margin-top: 5px; }
-
         .main-container { text-align: center; padding: 40px 20px; }
+        .dashboard { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; width: 90%; max-width: 800px; margin: 20px auto; }
+        .stat-card { background: var(--card); padding: 15px; border-radius: 15px; border: 1px solid #334155; }
+        .stat-value { font-size: 1.5rem; font-weight: bold; color: var(--primary); }
+
         .slider-container { width: 100%; max-width: 800px; margin: 0 auto 20px; border-radius: 20px; border: 3px solid var(--primary); overflow: hidden; }
         .slides { display: flex; transition: transform 0.6s ease; }
         .slide img { width: 100%; height: auto; display: block; }
@@ -22,31 +20,28 @@
         /* Chat Widget */
         #chat-widget { position: fixed; bottom: 25px; right: 25px; z-index: 1000; }
         #chat-button { width: 65px; height: 65px; background: var(--primary); border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; box-shadow: 0 8px 20px rgba(0,0,0,0.4); }
-        #chat-window { position: fixed; bottom: 100px; right: 25px; width: 400px; height: 600px; background: var(--card); border-radius: 25px; border: 1px solid var(--primary); display: none; flex-direction: column; overflow: hidden; }
+        #chat-window { position: fixed; bottom: 100px; right: 25px; width: 420px; height: 600px; background: var(--card); border-radius: 25px; border: 1px solid var(--primary); display: none; flex-direction: column; overflow: hidden; box-shadow: 0 15px 35px rgba(0,0,0,0.7); }
         
-        #chat-header { background: var(--primary); color: var(--dark); padding: 15px; font-weight: bold; display: flex; justify-content: space-between; }
-        #chat-messages { flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
-
-        .smart-box { background: #0f172a; padding: 15px; border-radius: 15px; border: 1px solid var(--primary); margin-top: 10px; font-size: 0.8rem; }
-        .smart-box input { width: 90%; padding: 8px; margin: 5px 0; border-radius: 5px; border: none; background: #1e293b; color: white; }
-        .btn-calc { background: var(--danger); color: white; border: none; padding: 10px; width: 100%; border-radius: 8px; font-weight: bold; cursor: pointer; }
-
-        .message { padding: 12px; border-radius: 15px; max-width: 85%; font-size: 0.9rem; }
-        .bot { background: #334155; align-self: flex-start; }
-        .user { background: var(--primary); color: var(--dark); align-self: flex-end; }
+        #chat-header { background: var(--primary); color: var(--dark); padding: 15px; font-weight: bold; display: flex; justify-content: space-between; align-items: center; }
+        #chat-messages { flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; background: #111827; }
         
-        #chat-input-area { padding: 15px; background: #0b1121; display: flex; gap: 8px; }
+        .message { padding: 12px 16px; border-radius: 15px; max-width: 85%; font-size: 0.95rem; line-height: 1.5; }
+        .bot { background: #1e293b; align-self: flex-start; border: 1px solid #334155; color: #e2e8f0; }
+        .user { background: var(--primary); color: var(--dark); align-self: flex-end; font-weight: 500; }
+        
+        #chat-input-area { padding: 15px; background: #0b1121; display: flex; gap: 8px; border-top: 1px solid #334155; }
         #chat-input { flex: 1; padding: 10px; border-radius: 12px; border: 1px solid #334155; background: #1e293b; color: white; outline: none; }
+        .btn-send { background: var(--primary); border: none; padding: 10px 20px; border-radius: 12px; cursor: pointer; color: var(--dark); font-weight: bold; }
     </style>
 </head>
 <body>
 
     <div class="main-container">
-        <h1 style="color: var(--primary);">MATINEQA SOLUTIONS</h1>
+        <h1 style="color: var(--primary); letter-spacing: 2px;">MATINEQA SOLUTIONS</h1>
         <div class="dashboard">
-            <div class="stat-card"><div class="stat-value" id="total-joints">124</div><div class="stat-label">Total Joints</div></div>
-            <div class="stat-card"><div class="stat-value" id="total-repairs">3</div><div class="stat-label">Repairs</div></div>
-            <div class="stat-card"><div class="stat-value" id="repair-rate" style="color: var(--success);">2.4%</div><div class="stat-label">Repair Rate</div></div>
+            <div class="stat-card"><div class="stat-value">124</div><div>Total Joints</div></div>
+            <div class="stat-card"><div class="stat-value">3</div><div>Repairs</div></div>
+            <div class="stat-card"><div class="stat-value" style="color:var(--success)">2.4%</div><div>Repair Rate</div></div>
         </div>
         
         <div class="slider-container">
@@ -56,84 +51,81 @@
                 <div class="slide"><img src="matine-boss.png.png"></div>
             </div>
         </div>
+        <p style="color: #94a3b8;">منصة إدارة الجودة الذكية - Senior QA/QC Assistant</p>
     </div>
 
     <div id="chat-widget">
         <div id="chat-window">
-            <div id="chat-header"><span>👧 Meriem AI - Analytics</span><button onclick="toggleChat()" style="background:none; border:none; cursor:pointer;">×</button></div>
-            <div id="chat-messages">
-                <div class="message bot">مرحباً مهندس صديقي. لقد قمت بتفعيل نظام تحليل نسبة الإصلاح. هل تود إدخال بيانات تفتيش RT/UT جديدة؟</div>
+            <div id="chat-header">
+                <span>👧 مريم (Senior QA/QC Expert)</span>
+                <button onclick="toggleChat()" style="background:none; border:none; cursor:pointer; font-size:20px;">×</button>
+            </div>
+            <div id="chat-messages" id="chat-box">
+                <div class="message bot">مرحباً مهندس صديقي. أنا مريم، مساعدة الجودة الخاصة بك. أنا مبرمجة وفق معايير ASME, DNV, API, ISO. كيف يمكنني مساعدتك في تدقيق الـ WPS أو تقارير NDT اليوم؟</div>
             </div>
             <div id="chat-input-area">
-                <input type="text" id="chat-input" placeholder="Type 'Repair' to update stats...">
-                <button onclick="sendMessage()" style="background:var(--primary); border:none; padding:10px; border-radius:10px; cursor:pointer;">Send</button>
+                <input type="text" id="chat-input" placeholder="اسأل عن المعايير أو سجلات اللحام...">
+                <button class="btn-send" onclick="handleChat()">إرسال</button>
             </div>
         </div>
-        <div id="chat-button" onclick="toggleChat()"><span>👧</span></div>
+        <div id="chat-button" onclick="toggleChat()">
+            <span style="font-size: 30px;">👧</span>
+        </div>
     </div>
 
     <script>
-        let joints = 124;
-        let repairs = 3;
-
         function toggleChat() {
             const win = document.getElementById('chat-window');
             win.style.display = win.style.display === 'flex' ? 'none' : 'flex';
         }
 
-        function updateStats() {
-            document.getElementById('total-joints').textContent = joints;
-            document.getElementById('total-repairs').textContent = repairs;
-            let rate = ((repairs / joints) * 100).toFixed(1);
-            const rateEl = document.getElementById('repair-rate');
-            rateEl.textContent = rate + "%";
-            rateEl.style.color = rate > 5 ? "var(--danger)" : "var(--success)";
-        }
+        // عقل مريم (System Instructions Simulation)
+        const engineeringKnowledge = {
+            "13cr": "بالنسبة لصلب 13Cr، يجب مراعاة معايير DNV-ST-F101 بدقة، خاصة فيما يتعلق بالتحكم في درجة حرارة ما بين التمريرات (Interpass Temperature) وتجنب التلوث الكربوني.",
+            "asme": "معايير ASME (مثل Section IX أو B31.3) هي المرجع الأساسي لتأهيل اللحامين (WPQ) وإجراءات اللحام (WPS). هل تود مراجعة حدود التأهيل؟",
+            "dnv": "وفقاً لـ DNV-ST-F101، متطلبات التفتيش لخطوط الأنابيب البحرية والبرية تتطلب رقابة صارمة على الـ NDT ونسبة عيوب منخفضة جداً.",
+            "api": "كود API 1104 يحدد معايير القبول والرفض لعيوب اللحام في خطوط الأنابيب. هل تريد تفاصيل عن أبعاد العيوب المسموحة؟",
+            "wps": "عند إعداد الـ WPS، يجب التأكد من مطابقة الـ PQR (سجل تأهيل الإجراء) لجميع المتغيرات الأساسية (Essential Variables) حسب الكود المستخدم.",
+            "vt": "التفتيش البصري (Visual Testing) هو الخطوة الأولى. يجب التأكد من عدم وجود Undercut أو Spatters قبل الانتقال للـ RT.",
+            "repair": "نسبة الإصلاح الحالية هي 2.4%. هذه النسبة جيدة جداً وتحت السيطرة حسب معايير المشروع المعمول بها."
+        };
 
-        function sendMessage() {
+        function handleChat() {
             const input = document.getElementById('chat-input');
-            const container = document.getElementById('chat-messages');
-            const val = input.value.trim().toLowerCase();
+            const box = document.getElementById('chat-messages');
+            const userText = input.value.trim().toLowerCase();
             
-            if (val !== "") {
-                const userMsg = document.createElement('div');
-                userMsg.className = 'message user';
-                userMsg.textContent = input.value;
-                container.appendChild(userMsg);
+            if (!userText) return;
 
-                setTimeout(() => {
-                    const botMsg = document.createElement('div');
-                    botMsg.className = 'message bot';
-                    
-                    if (val.includes("repair") || val.includes("اصلاح") || val.includes("rt")) {
-                        botMsg.innerHTML = `
-                            <b>تحديث بيانات الجودة:</b>
-                            <div class="smart-box">
-                                <input type="number" id="new-joints" placeholder="Number of New Joints">
-                                <input type="number" id="new-repairs" placeholder="Number of Repairs found">
-                                <button class="btn-calc" onclick="calculateNewStats()">تحديث الإحصائيات</button>
-                            </div>
-                        `;
-                    } else {
-                        botMsg.textContent = "أنا جاهزة لتحليل أداء اللحامين. اطلب 'Repair' لتحديث لوحة التحكم.";
+            // إضافة رسالة المستخدم
+            const userMsg = document.createElement('div');
+            userMsg.className = 'message user';
+            userMsg.textContent = input.value;
+            box.appendChild(userMsg);
+            input.value = "";
+
+            // تفكير مريم (Delayed Response)
+            setTimeout(() => {
+                const botMsg = document.createElement('div');
+                botMsg.className = 'message bot';
+                
+                let response = "بصفتي مهندسة جودة، أفهم استفسارك. لكن يرجى تزويدي بتفاصيل أكثر حول الكود المستخدم (مثل ASME أو DNV) لأعطيك إجابة دقيقة.";
+
+                // البحث في القاعدة المعرفية
+                for (let key in engineeringKnowledge) {
+                    if (userText.includes(key)) {
+                        response = engineeringKnowledge[key];
+                        break;
                     }
-                    container.appendChild(botMsg);
-                    container.scrollTop = container.scrollHeight;
-                }, 800);
-                input.value = "";
-                container.scrollTop = container.scrollHeight;
-            }
+                }
+
+                botMsg.textContent = response;
+                box.appendChild(botMsg);
+                box.scrollTop = box.scrollHeight;
+            }, 800);
         }
 
-        function calculateNewStats() {
-            const nj = parseInt(document.getElementById('new-joints').value) || 0;
-            const nr = parseInt(document.getElementById('new-repairs').value) || 0;
-            joints += nj;
-            repairs += nr;
-            updateStats();
-            alert("تم تحديث نسبة الإصلاح في Carnet de Soudage بنجاح!");
-        }
-
+        // Slider Animation
         let idx = 0;
         setInterval(() => {
             idx = (idx + 1) % 3;
